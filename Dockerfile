@@ -29,7 +29,9 @@ RUN apt-get install -y \
     wget \
     unzip \
     # Need the dotnet SDK to build godot with c# support
-    dotnet-sdk-8.0
+    dotnet-sdk-8.0 \
+    # Handy tool for removing carriage returns in files copied from windows
+    dos2unix
 
 # Configure mingw to run in posix mode, as there's a bug on ubuntu causing
 # it to run in win32 mode by default. We want 64.
@@ -47,20 +49,29 @@ WORKDIR "${BUILD_DIR}"
 # Get dx12 shader compiler for dx12 support
 ENV dxc_ver=dxc_2024_05_24
 RUN wget ${DXC_LINK} -O dxc.zip
-RUN unzip dxc.zip -d dxc
+RUN unzip dxc.zip -d dxc && rm dxc.zip
 
 # Get Mesa librariers for godot, which they already statically compile
 ENV mesa_ver=godot-nir-23.1.9
 RUN wget ${MESA_LINK} -O mesa.zip
-RUN unzip mesa.zip -d mesa
+RUN unzip mesa.zip -d mesa && rm mesa.zip
 
 # Get pix support, a performance and debug app for dx12 applications
 ENV pix_ver=1.0.240308001
 RUN wget ${PIX_LINK} -O pix.zip
-RUN unzip pix.zip -d pix
+RUN unzip pix.zip -d pix && rm pix.zip
+
+# =============================================================================
+# Copy build scripts into the image
+
+COPY ["./build scripts", "${BUILD_DIR}"]
 
 # =============================================================================
 # Get the actual source code for compiling
+
+# NOTE
+# I am instead using docker compose to mount a directory containing my fork of
+# the godot repo from my filesystem into the container.
 
 # If using a version with source code packaged in a zip, can just download
 # the zip and unzip it. Make sure to navigate into directory afterwards.
@@ -73,10 +84,6 @@ RUN unzip pix.zip -d pix
 # WORKDIR "${BUILD_DIR}/godot"
 # # RUN git switch master
 # RUN git checkout ${GIT_COMMIT}
-
-# NOTE
-# I am instead using docker compose to mount a directory containing my fork of
-# the godot repo from my filesystem into the container.
 
 # Example for how to download and install a module.
 # The repo name may not match what the actual name of the module is
