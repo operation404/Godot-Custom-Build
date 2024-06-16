@@ -1,6 +1,10 @@
 FROM ubuntu:latest
 
-ENV version=4.3-beta1
+ARG GIT_COMMIT
+ARG DXC_LINK
+ARG MESA_LINK
+ARG PIX_LINK
+ARG BUILD_DIR
 
 # Install the requirements for building Godot
 RUN apt-get update
@@ -33,25 +37,26 @@ RUN apt-get install -y \
 RUN update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
 RUN update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
 
+# Make and navigate to the directory used for building
+RUN mkdir -p ${BUILD_DIR}
+WORKDIR "${BUILD_DIR}"
+
 # =============================================================================
 # Get other libraries and sources that will be used for compiling.
 
 # Get dx12 shader compiler for dx12 support
 ENV dxc_ver=dxc_2024_05_24
-RUN wget https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.8.2405/${dxc_ver}.zip \
-    -O dxc.zip
+RUN wget ${DXC_LINK} -O dxc.zip
 RUN unzip dxc.zip -d dxc
 
 # Get Mesa librariers for godot, which they already statically compile
 ENV mesa_ver=godot-nir-23.1.9
-RUN wget https://github.com/godotengine/godot-nir-static/releases/download/23.1.9/${mesa_ver}.zip \
-    -O mesa.zip
+RUN wget ${MESA_LINK} -O mesa.zip
 RUN unzip mesa.zip -d mesa
 
 # Get pix support, a performance and debug app for dx12 applications
 ENV pix_ver=1.0.240308001
-RUN wget https://www.nuget.org/api/v2/package/WinPixEventRuntime/${pix_ver} \
-    -O pix.zip
+RUN wget ${PIX_LINK} -O pix.zip
 RUN unzip pix.zip -d pix
 
 # =============================================================================
@@ -59,15 +64,19 @@ RUN unzip pix.zip -d pix
 
 # If using a version with source code packaged in a zip, can just download
 # the zip and unzip it. Make sure to navigate into directory afterwards.
+# ENV version=4.3-beta1
 # RUN wget https://github.com/godotengine/godot-builds/archive/refs/tags/${version}.zip
 # RUN unzip ${version}.zip
 
 # NOTE : Otherwise, have to clone and checkout the correct branch and commit/tag
-RUN git clone https://github.com/godotengine/godot.git
-WORKDIR "/godot"
+# RUN git clone https://github.com/godotengine/godot.git
+# WORKDIR "${BUILD_DIR}/godot"
+# # RUN git switch master
+# RUN git checkout ${GIT_COMMIT}
 
-# RUN git switch master
-RUN git checkout a4f2ea91a1bd18f70a43ff4c1377db49b56bc3f0
+# NOTE
+# I am instead using docker compose to mount a directory containing my fork of
+# the godot repo from my filesystem into the container.
 
 # Example for how to download and install a module.
 # The repo name may not match what the actual name of the module is
@@ -86,15 +95,15 @@ RUN git checkout a4f2ea91a1bd18f70a43ff4c1377db49b56bc3f0
 # Build Godot
 
 # Windows build
-RUN scons platform=windows target=editor arch=x86_64 \
-    d3d12=yes dxc_path=/dxc mesa_libs=/mesa pix_path=/pix  \
-    # Options for build modes:
-    # dev_mode=yes \
-    # production=yes \
-    module_mono_enabled=yes
+# RUN scons platform=windows target=editor arch=x86_64 d3d12=yes \
+#     dxc_path=${BUILD_DIR}/dxc mesa_libs=${BUILD_DIR}/mesa pix_path=${BUILD_DIR}/pix \
+#     # Options for build modes:
+#     # dev_mode=yes \
+#     # production=yes \
+#     module_mono_enabled=yes
 
 # Also generate visual studio solution files
-RUN scons platform=windows vsproj=yes
+# RUN scons platform=windows vsproj=yes
 
 # Other example builds and options on docs
 # https://docs.godotengine.org/en/latest/contributing/development/compiling/introduction_to_the_buildsystem.html
