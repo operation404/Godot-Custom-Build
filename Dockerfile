@@ -31,7 +31,8 @@ RUN apt-get install -y \
     # Need the dotnet SDK to build godot with c# support
     dotnet-sdk-8.0 \
     # Handy tool for removing carriage returns in files copied from windows
-    dos2unix
+    dos2unix \
+    nano
 
 # Configure mingw to run in posix mode, as there's a bug on ubuntu causing
 # it to run in win32 mode by default. We want 64.
@@ -62,9 +63,10 @@ RUN wget ${PIX_LINK} -O pix.zip
 RUN unzip pix.zip -d pix && rm pix.zip
 
 # =============================================================================
-# Copy build scripts into the image
+# Copy build scripts into the image and clean any windows carriage return chars
 
 COPY ["./build scripts", "${BUILD_DIR}"]
+RUN dos2unix *.sh
 
 # =============================================================================
 # Get the actual source code for compiling
