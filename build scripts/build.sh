@@ -8,8 +8,6 @@ cd ./godot
 
 git checkout $git_commit
 
-scons --clean ${build_options}
-
 scons dxc_path=${build_dir}/dxc mesa_libs=${build_dir}/mesa pix_path=${build_dir}/pix \
     ${build_options}
     
