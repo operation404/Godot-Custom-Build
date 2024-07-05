@@ -10,7 +10,6 @@ d3d12=yes                       \
 module_mono_enabled=yes         \
 dev_mode=no                     \
 dev_build=yes                   \
-vsproj=yes                      \
 debug_symbols=yes               \
 separate_debug_symbols=yes      \
 optimize=debug                  \
