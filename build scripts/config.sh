@@ -15,7 +15,7 @@ separate_debug_symbols=yes      \
 optimize=debug                  \
 scu_build=yes                   \
 use_llvm=yes                    \
-linker=lld                      \
+linker=mold                     \
 "
 # dev_mode - treats all warnings as errors, verbose, builds unit tests
 # dev_build - disables optimizations and allows symbol generation

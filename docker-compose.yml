@@ -11,6 +11,7 @@ services:
         DXC_LINK: https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.8.2405/dxc_2024_05_24.zip
         MESA_LINK: https://github.com/godotengine/godot-nir-static/releases/download/23.1.9/godot-nir-23.1.9.zip
         PIX_LINK: https://www.nuget.org/api/v2/package/WinPixEventRuntime/1.0.240308001
+        PYSTON_LINK: https://github.com/pyston/pyston/releases/download/pyston_2.3.5/pyston_2.3.5_portable_amd64.tar.gz
     environment:
       BUILD_DIR: "/build"
     volumes:

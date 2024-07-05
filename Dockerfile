@@ -5,6 +5,7 @@ ARG DXC_LINK
 ARG MESA_LINK
 ARG PIX_LINK
 ARG BUILD_DIR
+ARG PYSTON_LINK
 
 # Install the requirements for building Godot
 RUN apt-get update
@@ -53,19 +54,26 @@ WORKDIR "${BUILD_DIR}"
 # Get other libraries and sources that will be used for compiling.
 
 # Get dx12 shader compiler for dx12 support
-ENV dxc_ver=dxc_2024_05_24
 RUN wget ${DXC_LINK} -O dxc.zip
 RUN unzip dxc.zip -d dxc && rm dxc.zip
 
 # Get Mesa librariers for godot, which they already statically compile
-ENV mesa_ver=godot-nir-23.1.9
 RUN wget ${MESA_LINK} -O mesa.zip
 RUN unzip mesa.zip -d mesa && rm mesa.zip
 
 # Get pix support, a performance and debug app for dx12 applications
-ENV pix_ver=1.0.240308001
 RUN wget ${PIX_LINK} -O pix.zip
 RUN unzip pix.zip -d pix && rm pix.zip
+
+# =============================================================================
+# Get and setup Pyston, a JIT python compiler for faster scons building
+
+RUN wget ${PYSTON_LINK} -O pyston.tar.gz
+RUN mkdir pyston && tar -xf pyston.tar.gz -C pyston --strip-components=1 && rm pyston.tar.gz
+WORKDIR "${BUILD_DIR}/pyston"
+RUN ./pyston -m pip install scons
+RUN ln -s ${BUILD_DIR}/pyston/bin/scons /usr/bin/pyston-scons
+WORKDIR "${BUILD_DIR}"
 
 # =============================================================================
 # Copy build scripts into the image and clean any windows carriage return chars
