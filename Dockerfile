@@ -25,6 +25,11 @@ RUN apt-get install -y \
     libwayland-dev \
     # Need mingw to cross compile to windows
     mingw-w64 \ 
+    # Using clang lld to compile since they can generate visual studio pdb symbols
+    clang \
+    lld \
+    # mold is an even faster linker
+    mold \
     git \
     wget \
     unzip \
