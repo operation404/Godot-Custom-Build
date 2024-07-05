@@ -38,4 +38,4 @@ RUN del /q vs_buildtools.exe
 WORKDIR ${BUILD_DIR}
 ENV PY_VER=3.12.4
 RUN curl https://www.python.org/ftp/python/${PY_VER}/python-${PY_VER}-amd64.exe -o python_installer.exe
-RUN python_installer.exe /quiet InstallAllUsers=1
+#RUN python_installer.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0

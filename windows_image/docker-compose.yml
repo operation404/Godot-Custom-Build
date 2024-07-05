@@ -13,11 +13,11 @@ services:
         PIX_LINK: https://www.nuget.org/api/v2/package/WinPixEventRuntime/1.0.240308001
         PYSTON_LINK: https://github.com/pyston/pyston/releases/download/pyston_2.3.5/pyston_2.3.5_portable_amd64.tar.gz
     environment:
-      BUILD_DIR: "/build"
-    # volumes:
-    #   - type: bind
-    #     source: D:\Projects and Repositories\Godot Building\godot
-    #     target: /build/godot
+      BUILD_DIR: \build
+    volumes:
+      - type: bind
+        source: D:\Projects and Repositories\Godot Building\godot
+        target: c:\build\godot
     develop:
       watch:
         - action: sync
