@@ -16,7 +16,7 @@ services:
       BUILD_DIR: "/build"
     volumes:
       - type: bind
-        source: ../godot
+        source: ../../godot
         target: /build/godot
     develop:
       watch:
