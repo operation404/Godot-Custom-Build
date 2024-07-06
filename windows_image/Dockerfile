@@ -9,33 +9,34 @@ SHELL ["cmd", "/S", "/C"]
 
 ARG BUILD_DIR
 ARG GIT_COMMIT
-ARG DXC_LINK
-ARG MESA_LINK
-ARG PIX_LINK
-ARG PYSTON_LINK
+ARG PYTHON_URL
+ARG DXC_URL
+ARG MESA_URL
+ARG PIX_URL
 
-# Download the Build Tools bootstrapper.
+# Download the Build Tools bootstrapper and install desired build tools components.
 RUN curl -SL --output vs_buildtools.exe https://aka.ms/vs/17/release/vs_buildtools.exe
-
-# Install Build Tools with the Microsoft.VisualStudio.Workload.AzureBuildTools workload, excluding workloads and components with known issues.
 RUN (start /w vs_buildtools.exe --quiet --wait --norestart --nocache `
     --installPath "%ProgramFiles(x86)%\Microsoft Visual Studio\2022\BuildTools" `
-    --add Microsoft.VisualStudio.Workload.AzureBuildTools `
-    --remove Microsoft.VisualStudio.Component.Windows10SDK.10240 `
-    --remove Microsoft.VisualStudio.Component.Windows10SDK.10586 `
-    --remove Microsoft.VisualStudio.Component.Windows10SDK.14393 `
-    --remove Microsoft.VisualStudio.Component.Windows81SDK `
+    #--includeRecommended --includeOptional `
+    --add Microsoft.VisualStudio.Workload.VCTools `
+    --add Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools `
     || IF "%ERRORLEVEL%"=="3010" EXIT 0)
-    
-# Cleanup
 RUN del /q vs_buildtools.exe
 
-# Define the entry point for the docker container.
-# This entry point starts the developer command prompt and launches the PowerShell shell.
+# Entry point that starts the developer command prompt and launches PowerShell.
 # ENTRYPOINT ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "-arch=amd64", "&&", "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
 
 # WORKDIR makes directory if it doesn't exist
 WORKDIR ${BUILD_DIR}
-ENV PY_VER=3.12.4
-RUN curl https://www.python.org/ftp/python/${PY_VER}/python-${PY_VER}-amd64.exe -o python_installer.exe
-#RUN python_installer.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
+
+# Download and install Python
+RUN curl %PYTHON_URL% -o python_installer.exe
+RUN python_installer.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
+RUN del /q python_installer.exe
+
+# Install SCons
+# Python/Pip behaves oddly here when run through the dockerfile, something to do with opening
+# subprocesses with invalid file handled causes an error, failing the image build.
+# Redirecting stdin to nul (windows equiv of /dev/null) seems to prevent the error.
+RUN python -m pip install scons < nul

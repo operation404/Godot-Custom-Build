@@ -8,10 +8,10 @@ services:
       args:
         BUILD_DIR: \build
         GIT_COMMIT: a4f2ea91a1bd18f70a43ff4c1377db49b56bc3f0
-        DXC_LINK: https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.8.2405/dxc_2024_05_24.zip
-        MESA_LINK: https://github.com/godotengine/godot-nir-static/releases/download/23.1.9/godot-nir-23.1.9.zip
-        PIX_LINK: https://www.nuget.org/api/v2/package/WinPixEventRuntime/1.0.240308001
-        PYSTON_LINK: https://github.com/pyston/pyston/releases/download/pyston_2.3.5/pyston_2.3.5_portable_amd64.tar.gz
+        PYTHON_URL: https://www.python.org/ftp/python/3.12.4/python-3.12.4-amd64.exe
+        DXC_URL: https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.8.2405/dxc_2024_05_24.zip
+        MESA_URL: https://github.com/godotengine/godot-nir-static/releases/download/23.1.9/godot-nir-23.1.9.zip
+        PIX_URL: https://www.nuget.org/api/v2/package/WinPixEventRuntime/1.0.240308001
     environment:
       BUILD_DIR: \build
     volumes:
@@ -21,5 +21,5 @@ services:
     develop:
       watch:
         - action: sync
-          path: "./build scripts"
-          target: /build
+          path: .\build scripts
+          target: c:\build
