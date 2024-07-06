@@ -9,6 +9,7 @@ services:
         BUILD_DIR: \build
         GIT_COMMIT: a4f2ea91a1bd18f70a43ff4c1377db49b56bc3f0
         BUILD_TOOLS_URL: https://aka.ms/vs/17/release/vs_buildtools.exe
+        GIT_URL: https://github.com/git-for-windows/git/releases/download/v2.45.2.windows.1/PortableGit-2.45.2-64-bit.7z.exe
         PYTHON_URL: https://www.python.org/ftp/python/3.12.4/python-3.12.4-amd64.exe
         DXC_URL: https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.8.2405/dxc_2024_05_24.zip
         MESA_URL: https://github.com/godotengine/godot-nir-static/releases/download/23.1.9/godot-nir-23.1.9.zip
