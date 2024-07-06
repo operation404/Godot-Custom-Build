@@ -18,14 +18,13 @@ ARG PIX_URL
 RUN curl -SL --output vs_buildtools.exe https://aka.ms/vs/17/release/vs_buildtools.exe
 RUN (start /w vs_buildtools.exe --quiet --wait --norestart --nocache `
     --installPath "%ProgramFiles(x86)%\Microsoft Visual Studio\2022\BuildTools" `
-    #--includeRecommended --includeOptional `
+    # Workloads (groups of components), installs required only by default
+     --includeRecommended `
+    # --includeOptional `
     --add Microsoft.VisualStudio.Workload.VCTools `
     --add Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools `
     || IF "%ERRORLEVEL%"=="3010" EXIT 0)
 RUN del /q vs_buildtools.exe
-
-# Entry point that starts the developer command prompt and launches PowerShell.
-# ENTRYPOINT ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "-arch=amd64", "&&", "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
 
 # WORKDIR makes directory if it doesn't exist
 WORKDIR ${BUILD_DIR}
@@ -38,5 +37,8 @@ RUN del /q python_installer.exe
 # Install SCons
 # Python/Pip behaves oddly here when run through the dockerfile, something to do with opening
 # subprocesses with invalid file handled causes an error, failing the image build.
-# Redirecting stdin to nul (windows equiv of /dev/null) seems to prevent the error.
-RUN python -m pip install scons < nul
+# Redirecting stdin to nul (windows equiv of /dev/null) seems to prevent the error. Sometimes.
+RUN python -m pip install scons --root c:\ < nul > nul
+
+# Entry point that starts the developer command prompt and launches PowerShell.
+ENTRYPOINT ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "-arch=amd64", "&&", "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]

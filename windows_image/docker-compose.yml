@@ -23,3 +23,6 @@ services:
         - action: sync
           path: .\build scripts
           target: c:\build
+    resources:
+      limits:
+        
