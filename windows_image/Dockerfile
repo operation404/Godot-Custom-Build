@@ -56,9 +56,19 @@ RUN del /q python_installer.exe
 # Redirecting stdin to nul (windows equiv of /dev/null) seems to prevent the error. Sometimes.
 RUN python -m pip install scons --root c:\ < nul > nul
 
+# Download 7zip
+ARG 7ZIP_URL
+RUN mkdir c:\7zip
+RUN curl -SL %7ZIP_URL% -o 7zip_installer.exe
+RUN 7zip_installer.exe /S
+RUN setx path "%path%;C:\Program Files\7-zip"
+
 # Download and install git
 ARG GIT_URL
-RUN curl -SL %GIT_URL% -o git_portable.exe
+RUN mkdir c:\git
+RUN curl -SL %GIT_URL% -o git_portable.7z.exe
+RUN 7z x git_portable.7z.exe -oC:\git -y > nul
+RUN setx path "%path%;C:\git\bin"
 
 # =============================================================================
 # Set up build scripts and container entry point.
