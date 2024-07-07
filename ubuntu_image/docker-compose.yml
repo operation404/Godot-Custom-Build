@@ -14,6 +14,7 @@ services:
         PYSTON_LINK: https://github.com/pyston/pyston/releases/download/pyston_2.3.5/pyston_2.3.5_portable_amd64.tar.gz
     environment:
       BUILD_DIR: "/build"
+      GIT_COMMIT: a4f2ea91a1bd18f70a43ff4c1377db49b56bc3f0
     volumes:
       - type: bind
         source: ../../godot

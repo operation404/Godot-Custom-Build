@@ -17,12 +17,11 @@ services:
         PIX_URL: https://www.nuget.org/api/v2/package/WinPixEventRuntime/1.0.240308001
     environment:
       BUILD_DIR: \build
+      GIT_COMMIT: a4f2ea91a1bd18f70a43ff4c1377db49b56bc3f0
     volumes:
       - type: bind
         source: D:\Projects and Repositories\Godot Building\godot
         target: c:\build\godot
-    develop:
-      watch:
-        - action: sync
-          path: .\build scripts
-          target: c:\build
+      - type: bind
+        source: D:\Projects and Repositories\Godot Building\custom-build\windows_image\build scripts
+        target: c:\build\scripts

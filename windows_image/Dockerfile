@@ -73,7 +73,8 @@ RUN setx path "%path%;C:\git\bin"
 # =============================================================================
 # Set up build scripts and container entry point.
 
-ARG GIT_COMMIT
+COPY ["./build scripts", "${BUILD_DIR}/scripts"]
+WORKDIR ${BUILD_DIR}\scripts
 
 COPY ["./build scripts", "${BUILD_DIR}"]
 
