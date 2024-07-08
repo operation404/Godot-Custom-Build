@@ -1,0 +1,23 @@
+name: godot-build-windows
+
+services:
+  winbuilder:
+    image: godot-build-windows:latest
+    build: 
+      context: .
+      args:
+        BUILD_DIR: \build
+        BUILD_TOOLS_URL: https://aka.ms/vs/17/release/vs_buildtools.exe
+        7ZIP_URL: https://www.7-zip.org/a/7z2407-x64.exe
+        GIT_URL: https://github.com/git-for-windows/git/releases/download/v2.45.2.windows.1/PortableGit-2.45.2-64-bit.7z.exe
+        PYTHON_URL: https://www.python.org/ftp/python/3.12.4/python-3.12.4-amd64.exe
+        DXC_URL: https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.8.2405/dxc_2024_05_24.zip
+        MESA_URL: https://github.com/godotengine/godot-nir-static/releases/download/23.1.9/godot-nir-23.1.9.zip
+        PIX_URL: https://www.nuget.org/api/v2/package/WinPixEventRuntime/1.0.240308001
+    environment:
+      BUILD_DIR: \build
+      GIT_COMMIT: 15073afe3856abd2aa1622492fe50026c7d63dc1
+    volumes:
+      - type: bind
+        source: D:\Projects and Repositories\Godot Building\godot
+        target: c:\build\godot

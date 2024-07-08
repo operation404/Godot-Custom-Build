@@ -9,7 +9,9 @@ dev_build=yes                   ^
 debug_symbols=yes               ^
 separate_debug_symbols=yes      ^
 optimize=debug                  ^
-scu_build=yes                   
+scu_build=yes                   ^
+scu_limit=1024                  ^
+vs_proj=no
 
 :: dev_mode - treats all warnings as errors, verbose, builds unit tests
 :: dev_build - disables optimizations and allows symbol generation

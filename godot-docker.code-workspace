@@ -1,0 +1,22 @@
+{
+    "folders": [
+		{
+			"name": "Godot Building",
+			"path": ".."
+		},
+		{
+			"name": "Dungeon-Synn",
+			"path": "../../Godot Projects/Dungeon-Synn"
+		}
+	],
+    "settings": {
+        "files.associations": {
+            "*.py": "python",
+            "*.gdshader": "godot-shader",
+            "*.glsl": "glsl",
+            "*.comp": "glsl",
+            "*.cs": "csharp",
+            "*.inc": "cpp"
+        }
+    }
+}
