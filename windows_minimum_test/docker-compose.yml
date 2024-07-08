@@ -1,8 +1,8 @@
-name: godot-build-windows
+name: minimal-build-test
 
 services:
-  winbuilder:
-    image: godot-build-windows:latest
+  minbuilder:
+    image: minimal-build-test:latest
     build: 
       context: .
       args:
