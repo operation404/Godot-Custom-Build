@@ -7,7 +7,6 @@ services:
       context: .
       args:
         BUILD_DIR: \build
-        GIT_COMMIT: a4f2ea91a1bd18f70a43ff4c1377db49b56bc3f0
         BUILD_TOOLS_URL: https://aka.ms/vs/17/release/vs_buildtools.exe
         7ZIP_URL: https://www.7-zip.org/a/7z2407-x64.exe
         GIT_URL: https://github.com/git-for-windows/git/releases/download/v2.45.2.windows.1/PortableGit-2.45.2-64-bit.7z.exe

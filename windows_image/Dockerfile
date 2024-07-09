@@ -2,7 +2,8 @@
 
 # Start from a windows base image.
 #FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64
-FROM mcr.microsoft.com/windows:10.0.19042.1889-amd64
+# FROM mcr.microsoft.com/windows:10.0.19042.1889-amd64
+FROM mcr.microsoft.com/dotnet/sdk:8.0-windowsservercore-ltsc2019
 
 # Restore the default Windows shell for correct batch processing.
 SHELL ["cmd", "/S", "/C"]
@@ -22,27 +23,12 @@ RUN (start /w vs_buildtools.exe --quiet --wait --norestart --nocache `
      --includeRecommended `
     # --includeOptional `
     --add Microsoft.VisualStudio.Workload.VCTools `
-    --add Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools `
+    # --add Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools `
     || IF "%ERRORLEVEL%"=="3010" EXIT 0)
 RUN del /q vs_buildtools.exe
 
 # =============================================================================
 # Get other libraries and sources that will be used for compiling.
-
-# Get dx12 shader compiler for dx12 support
-ARG DXC_URL
-RUN curl -SL %DXC_URL% --output dxc.zip
-RUN mkdir dxc && tar -xf dxc.zip -C dxc && del /q dxc.zip
-
-# Get Mesa librariers for godot, which they already statically compile
-ARG MESA_URL
-RUN curl -SL %MESA_URL% --output mesa.zip
-RUN mkdir mesa && tar -xf mesa.zip -C mesa && del /q mesa.zip
-
-# Get pix support, a performance and debug app for dx12 applications
-ARG PIX_URL
-RUN curl -SL %PIX_URL% --output pix.zip
-RUN mkdir pix && tar -xf pix.zip -C pix && del /q pix.zip
 
 # Download and install Python
 ARG PYTHON_URL
@@ -70,10 +56,24 @@ RUN curl -SL %GIT_URL% -o git_portable.7z.exe
 RUN 7z x git_portable.7z.exe -oC:\git -y > nul && del /q git_portable.7z.exe
 RUN setx path "%path%;C:\git\bin"
 
+# Get dx12 shader compiler for dx12 support
+ARG DXC_URL
+RUN curl -SL %DXC_URL% --output dxc.zip
+RUN mkdir dxc && tar -xf dxc.zip -C dxc && del /q dxc.zip
+
+# Get Mesa librariers for godot, which they already statically compile
+ARG MESA_URL
+RUN curl -SL %MESA_URL% --output mesa.zip
+RUN mkdir mesa && tar -xf mesa.zip -C mesa && del /q mesa.zip
+
+# Get pix support, a performance and debug app for dx12 applications
+ARG PIX_URL
+RUN curl -SL %PIX_URL% --output pix.zip
+RUN mkdir pix && tar -xf pix.zip -C pix && del /q pix.zip
+
 # =============================================================================
 # Set up build scripts and container entry point.
 
-COPY ["./build scripts", "${BUILD_DIR}/scripts"]
 WORKDIR ${BUILD_DIR}\scripts
 
 # Disable all git safe directory warnings, which are thrown because the container user is
